@@ -1,0 +1,64 @@
+{
+  "run_key": 1,
+  "reused": false,
+  "mode": "train",
+  "champion": "sarima",
+  "complete_weeks": 160,
+  "training_end": "2014-06-23",
+  "data_hash": "7c5bcf2e1bb224b538070a79dc8e86f19487d89bb29c0dccc808c59b51c0b54a",
+  "horizon": 8,
+  "evaluations": [
+    {
+      "ModelName": "seasonal_naive",
+      "EvaluationSet": "validation",
+      "MAE": 755713.5491803125,
+      "RMSE": 1251741.1315138824,
+      "WMAPE": 0.7121048916222557,
+      "Bias": -0.39651865545883186,
+      "IntervalCoverage": null,
+      "N": 32
+    },
+    {
+      "ModelName": "moving_average_4",
+      "EvaluationSet": "validation",
+      "MAE": 1035405.1907213749,
+      "RMSE": 1316268.9679157406,
+      "WMAPE": 0.9756568503019422,
+      "Bias": -0.07869745215027259,
+      "IntervalCoverage": null,
+      "N": 32
+    },
+    {
+      "ModelName": "sarima",
+      "EvaluationSet": "validation",
+      "MAE": 576684.318822466,
+      "RMSE": 1197698.0616111907,
+      "WMAPE": 0.5434065920886955,
+      "Bias": -0.18858565638483327,
+      "IntervalCoverage": null,
+      "N": 32
+    },
+    {
+      "ModelName": "xgboost",
+      "EvaluationSet": "validation",
+      "MAE": 635734.0798584999,
+      "RMSE": 1186177.641348962,
+      "WMAPE": 0.5990488704737983,
+      "Bias": -0.255909573571942,
+      "IntervalCoverage": null,
+      "N": 32
+    },
+    {
+      "ModelName": "sarima",
+      "EvaluationSet": "holdout",
+      "MAE": 1200390.5383699988,
+      "RMSE": 1952150.3516380554,
+      "WMAPE": 5.350326108802145,
+      "Bias": 4.598974870239188,
+      "IntervalCoverage": 0.75,
+      "N": 8
+    }
+  ],
+  "failures": {},
+  "interval_note": "Approximate 80% bands calibrated on rolling validation errors; holdout coverage reported separately."
+}

@@ -1,0 +1,80 @@
+-- FactSales
+Net Sales = SUM(FactSales[NetSales])
+
+-- FactSales
+Quantity = SUM(FactSales[OrderQty])
+
+-- FactSales
+Total Orders = DISTINCTCOUNT(FactSales[SalesOrderID])
+
+-- FactSales
+AOV = DIVIDE([Net Sales],[Total Orders])
+
+-- FactSales
+ASP = DIVIDE([Net Sales],[Quantity])
+
+-- FactSales
+Estimated Gross Profit = SUM(FactSales[EstimatedGrossProfit])
+
+-- FactSales
+Cost Covered Sales = CALCULATE([Net Sales],FILTER(FactSales,NOT ISBLANK(FactSales[EstimatedCost])))
+
+-- FactSales
+Estimated Margin = DIVIDE([Estimated Gross Profit],[Cost Covered Sales])
+
+-- FactSales
+Cost Coverage = DIVIDE([Cost Covered Sales],[Net Sales])
+
+-- FactSales
+Sales Previous Year = CALCULATE([Net Sales],DATEADD(DimDate[Date],-1,YEAR))
+
+-- FactSales
+YoY Growth = DIVIDE([Net Sales]-[Sales Previous Year],[Sales Previous Year])
+
+-- FactSales
+Sales Previous Month = CALCULATE([Net Sales],DATEADD(DimDate[Date],-1,MONTH))
+
+-- FactSales
+MoM Growth = DIVIDE([Net Sales]-[Sales Previous Month],[Sales Previous Month])
+
+-- ForecastChart
+Actual Sales = SUM(ForecastChart[ActualSales])
+
+-- ForecastChart
+Forecast Sales = SUM(ForecastChart[PredictedSales])
+
+-- ForecastChart
+Lower 80% = SUM(ForecastChart[LowerBound])
+
+-- ForecastChart
+Upper 80% = SUM(ForecastChart[UpperBound])
+
+-- Forecast
+Model Status = SELECTEDVALUE(Forecast[ReleaseStatus],"NO FORECAST")
+
+-- Forecast
+Champion = SELECTEDVALUE(Forecast[Champion],"NO MODEL")
+
+-- Forecast
+Forecast Origin = MAX(Forecast[ForecastOriginDate])
+
+-- Forecast
+Eight Week Forecast = SUM(Forecast[PredictedSales])
+
+-- Forecast
+Planning Guidance = IF([Model Status]="REVIEW_REQUIRED","Review model and sales history before changing plans","Review forecast with the sales planning team")
+
+-- ModelEvaluation
+Holdout wMAPE = CALCULATE(MAX(ModelEvaluation[WMAPE]),ModelEvaluation[EvaluationSet]="holdout")
+
+-- ModelEvaluation
+Holdout Coverage = CALCULATE(MAX(ModelEvaluation[IntervalCoverage]),ModelEvaluation[EvaluationSet]="holdout")
+
+-- ModelEvaluation
+Holdout Bias = CALCULATE(MAX(ModelEvaluation[Bias]),ModelEvaluation[EvaluationSet]="holdout")
+
+-- Quarantine
+Rejected Lines = COUNTROWS(Quarantine)
+
+-- ETLBatch
+Last Successful ETL = CALCULATE(MAX(ETLBatch[FinishedAt]),ETLBatch[Status]="SUCCESS")

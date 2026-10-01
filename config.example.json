@@ -1,0 +1,17 @@
+{
+  "server": "localhost",
+  "source_database": "CompanyX_BI_Source",
+  "warehouse_database": "CompanyX_BI_DW",
+  "odbc_driver": "ODBC Driver 18 for SQL Server",
+  "trusted_connection": true,
+  "encrypt": true,
+  "trust_server_certificate": true,
+  "horizon": 8,
+  "season_length": 52,
+  "min_train_weeks": 104,
+  "validation_folds": 4,
+  "holdout_weeks": 8,
+  "interval_level": 0.8,
+  "include_xgboost": true,
+  "lookback_days": 2
+}

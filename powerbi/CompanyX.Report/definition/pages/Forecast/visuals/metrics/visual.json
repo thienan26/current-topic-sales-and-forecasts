@@ -1,0 +1,116 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "metrics",
+  "position": {
+    "x": 24,
+    "y": 570,
+    "z": 0,
+    "height": 195,
+    "width": 795,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "tableEx",
+    "query": {
+      "queryState": {
+        "Values": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ModelEvaluation"
+                    }
+                  },
+                  "Property": "ModelName"
+                }
+              },
+              "queryRef": "ModelEvaluation.ModelName",
+              "nativeQueryRef": "ModelName"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ModelEvaluation"
+                    }
+                  },
+                  "Property": "EvaluationSet"
+                }
+              },
+              "queryRef": "ModelEvaluation.EvaluationSet",
+              "nativeQueryRef": "EvaluationSet"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ModelEvaluation"
+                    }
+                  },
+                  "Property": "WMAPE"
+                }
+              },
+              "queryRef": "ModelEvaluation.WMAPE",
+              "nativeQueryRef": "WMAPE"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ModelEvaluation"
+                    }
+                  },
+                  "Property": "Bias"
+                }
+              },
+              "queryRef": "ModelEvaluation.Bias",
+              "nativeQueryRef": "Bias"
+            },
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ModelEvaluation"
+                    }
+                  },
+                  "Property": "IntervalCoverage"
+                }
+              },
+              "queryRef": "ModelEvaluation.IntervalCoverage",
+              "nativeQueryRef": "IntervalCoverage"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Validation selects the model; holdout evaluates it'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

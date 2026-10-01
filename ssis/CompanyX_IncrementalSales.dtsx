@@ -1,0 +1,50 @@
+<?xml version="1.0"?>
+<DTS:Executable xmlns:DTS="www.microsoft.com/SqlServer/Dts"
+  DTS:refId="Package"
+  DTS:CreationDate="10/1/2026 10:17:51 PM"
+  DTS:CreationName="Microsoft.Package"
+  DTS:CreatorComputerName="LAPTOP-NHAFMHS7"
+  DTS:CreatorName="LAPTOP-NHAFMHS7\ASUS"
+  DTS:Description="Transactional staging, validation, SCD2, fact loading, reconciliation and audit in ctl.LoadSales."
+  DTS:DTSID="{F6D26DEC-9B33-482C-B8E2-0675ECA0688E}"
+  DTS:ExecutableType="Microsoft.Package"
+  DTS:LastModifiedProductVersion="17.0.1000.7"
+  DTS:LocaleID="1033"
+  DTS:ObjectName="CompanyX_IncrementalSales"
+  DTS:ProtectionLevel="0"
+  DTS:VersionGUID="{4AE68A72-9447-4674-873F-D5A9B381FE14}">
+  <DTS:Property
+    DTS:Name="PackageFormatVersion">8</DTS:Property>
+  <DTS:ConnectionManagers>
+    <DTS:ConnectionManager
+      DTS:refId="Package.ConnectionManagers[Warehouse]"
+      DTS:CreationName="ADO.NET:System.Data.SqlClient.SqlConnection, System.Data, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089"
+      DTS:DTSID="{FCE6CA3C-41DA-4329-A625-1053B5562C14}"
+      DTS:ObjectName="Warehouse">
+      <DTS:ObjectData>
+        <DTS:ConnectionManager
+          DTS:ConnectionString="Data Source=localhost;Initial Catalog=CompanyX_BI_DW;Integrated Security=True;Encrypt=True;TrustServerCertificate=True;Application Name=CompanyX SSIS;" />
+      </DTS:ObjectData>
+    </DTS:ConnectionManager>
+  </DTS:ConnectionManagers>
+  <DTS:Variables />
+  <DTS:Executables>
+    <DTS:Executable
+      DTS:refId="Package\Load sales with atomic watermark"
+      DTS:CreationName="Microsoft.ExecuteSQLTask"
+      DTS:DTSID="{0DA50110-F869-49D4-85CF-244FC09E0A3A}"
+      DTS:ExecutableType="Microsoft.ExecuteSQLTask"
+      DTS:LocaleID="-1"
+      DTS:ObjectName="Load sales with atomic watermark"
+      DTS:TaskContact="Execute SQL Task; Microsoft Corporation; SQL Server 2025; © 2025 Microsoft Corporation; All Rights Reserved;http://www.microsoft.com/sql/support/default.asp;1"
+      DTS:ThreadHint="0">
+      <DTS:Variables />
+      <DTS:ObjectData>
+        <SQLTask:SqlTaskData
+          SQLTask:Connection="{FCE6CA3C-41DA-4329-A625-1053B5562C14}"
+          SQLTask:TimeOut="300"
+          SQLTask:SqlStatementSource="EXEC ctl.LoadSales @FullReconcile=0,@LookbackDays=2;" xmlns:SQLTask="www.microsoft.com/sqlserver/dts/tasks/sqltask" />
+      </DTS:ObjectData>
+    </DTS:Executable>
+  </DTS:Executables>
+</DTS:Executable>

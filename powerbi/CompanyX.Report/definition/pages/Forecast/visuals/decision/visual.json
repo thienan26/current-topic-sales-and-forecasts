@@ -1,0 +1,36 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "decision",
+  "position": {
+    "x": 839,
+    "y": 570,
+    "z": 0,
+    "width": 415,
+    "height": 195,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "textbox",
+    "objects": {
+      "general": [
+        {
+          "properties": {
+            "paragraphs": [
+              {
+                "textRuns": [
+                  {
+                    "value": "Decision: review model errors and recent sales before changing the sales plan. Revenue forecasts alone cannot determine SKU replenishment quantities; stock, lead time and unit demand are needed.",
+                    "textStyle": {
+                      "fontSize": "15pt",
+                      "fontFamily": "Segoe UI"
+                    }
+                  }
+                ]
+              }
+            ]
+          }
+        }
+      ]
+    }
+  }
+}

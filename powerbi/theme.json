@@ -1,0 +1,21 @@
+{
+  "name": "CompanyX",
+  "dataColors": [
+    "#145C73",
+    "#F4A259",
+    "#64748B",
+    "#89B6A5",
+    "#9A5C73"
+  ],
+  "background": "#F5F7FA",
+  "foreground": "#183042",
+  "tableAccent": "#145C73",
+  "textClasses": {
+    "title": {
+      "fontFace": "Segoe UI Semibold"
+    },
+    "label": {
+      "fontFace": "Segoe UI"
+    }
+  }
+}

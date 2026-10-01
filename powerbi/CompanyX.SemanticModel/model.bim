@@ -1,0 +1,1043 @@
+{
+  "name": "CompanyX",
+  "compatibilityLevel": 1600,
+  "model": {
+    "culture": "en-US",
+    "defaultPowerBIDataSourceVersion": "powerBI_V3",
+    "tables": [
+      {
+        "name": "FactSales",
+        "columns": [
+          {
+            "name": "SalesOrderDetailID",
+            "dataType": "int64",
+            "sourceColumn": "SalesOrderDetailID",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "SalesOrderID",
+            "dataType": "int64",
+            "sourceColumn": "SalesOrderID",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "SalesDateKey",
+            "dataType": "int64",
+            "sourceColumn": "SalesDateKey",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "ProductKey",
+            "dataType": "int64",
+            "sourceColumn": "ProductKey",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "CustomerKey",
+            "dataType": "int64",
+            "sourceColumn": "CustomerKey",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "SalesPersonKey",
+            "dataType": "int64",
+            "sourceColumn": "SalesPersonKey",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "TerritoryKey",
+            "dataType": "int64",
+            "sourceColumn": "TerritoryKey",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "PromotionKey",
+            "dataType": "int64",
+            "sourceColumn": "PromotionKey",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "OrderQty",
+            "dataType": "int64",
+            "sourceColumn": "OrderQty",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "NetSales",
+            "dataType": "double",
+            "sourceColumn": "NetSales",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "EstimatedCost",
+            "dataType": "double",
+            "sourceColumn": "EstimatedCost",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "EstimatedGrossProfit",
+            "dataType": "double",
+            "sourceColumn": "EstimatedGrossProfit",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "FactSales",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Sql.Database(\"localhost\", \"CompanyX_BI_DW\", [CreateNavigationProperties=false]),",
+                "    Data = Source{[Schema=\"mart\",Item=\"Sales\"]}[Data],",
+                "    Selected = Table.SelectColumns(Data, {\"SalesOrderDetailID\", \"SalesOrderID\", \"SalesDateKey\", \"ProductKey\", \"CustomerKey\", \"SalesPersonKey\", \"TerritoryKey\", \"PromotionKey\", \"OrderQty\", \"NetSales\", \"EstimatedCost\", \"EstimatedGrossProfit\"})",
+                "in",
+                "    Selected"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Net Sales",
+            "expression": "SUM(FactSales[NetSales])",
+            "formatString": "#,0.00"
+          },
+          {
+            "name": "Quantity",
+            "expression": "SUM(FactSales[OrderQty])",
+            "formatString": "#,0"
+          },
+          {
+            "name": "Total Orders",
+            "expression": "DISTINCTCOUNT(FactSales[SalesOrderID])",
+            "formatString": "#,0"
+          },
+          {
+            "name": "AOV",
+            "expression": "DIVIDE([Net Sales],[Total Orders])",
+            "formatString": "#,0.00"
+          },
+          {
+            "name": "ASP",
+            "expression": "DIVIDE([Net Sales],[Quantity])",
+            "formatString": "#,0.00"
+          },
+          {
+            "name": "Estimated Gross Profit",
+            "expression": "SUM(FactSales[EstimatedGrossProfit])",
+            "formatString": "#,0.00"
+          },
+          {
+            "name": "Cost Covered Sales",
+            "expression": "CALCULATE([Net Sales],FILTER(FactSales,NOT ISBLANK(FactSales[EstimatedCost])))",
+            "formatString": "#,0.00"
+          },
+          {
+            "name": "Estimated Margin",
+            "expression": "DIVIDE([Estimated Gross Profit],[Cost Covered Sales])",
+            "formatString": "0.0%"
+          },
+          {
+            "name": "Cost Coverage",
+            "expression": "DIVIDE([Cost Covered Sales],[Net Sales])",
+            "formatString": "0.0%"
+          },
+          {
+            "name": "Sales Previous Year",
+            "expression": "CALCULATE([Net Sales],DATEADD(DimDate[Date],-1,YEAR))",
+            "formatString": "#,0.00"
+          },
+          {
+            "name": "YoY Growth",
+            "expression": "DIVIDE([Net Sales]-[Sales Previous Year],[Sales Previous Year])",
+            "formatString": "0.0%"
+          },
+          {
+            "name": "Sales Previous Month",
+            "expression": "CALCULATE([Net Sales],DATEADD(DimDate[Date],-1,MONTH))",
+            "formatString": "#,0.00"
+          },
+          {
+            "name": "MoM Growth",
+            "expression": "DIVIDE([Net Sales]-[Sales Previous Month],[Sales Previous Month])",
+            "formatString": "0.0%"
+          }
+        ]
+      },
+      {
+        "name": "DimDate",
+        "columns": [
+          {
+            "name": "DateKey",
+            "dataType": "int64",
+            "sourceColumn": "DateKey",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "Date",
+            "dataType": "dateTime",
+            "sourceColumn": "Date",
+            "summarizeBy": "none",
+            "formatString": "dd MMM yyyy",
+            "isKey": true
+          },
+          {
+            "name": "Year",
+            "dataType": "int64",
+            "sourceColumn": "Year",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Quarter",
+            "dataType": "int64",
+            "sourceColumn": "Quarter",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Month",
+            "dataType": "int64",
+            "sourceColumn": "Month",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "MonthName",
+            "dataType": "string",
+            "sourceColumn": "MonthName",
+            "summarizeBy": "none",
+            "sortByColumn": "Month"
+          },
+          {
+            "name": "YearMonth",
+            "dataType": "string",
+            "sourceColumn": "YearMonth",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "WeekStart",
+            "dataType": "dateTime",
+            "sourceColumn": "WeekStart",
+            "summarizeBy": "none",
+            "formatString": "dd MMM yyyy"
+          },
+          {
+            "name": "ISOWeek",
+            "dataType": "int64",
+            "sourceColumn": "ISOWeek",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "ISOYear",
+            "dataType": "int64",
+            "sourceColumn": "ISOYear",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "DimDate",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Sql.Database(\"localhost\", \"CompanyX_BI_DW\", [CreateNavigationProperties=false]),",
+                "    Data = Source{[Schema=\"dw\",Item=\"DimDate\"]}[Data],",
+                "    Selected = Table.SelectColumns(Data, {\"DateKey\", \"Date\", \"Year\", \"Quarter\", \"Month\", \"MonthName\", \"YearMonth\", \"WeekStart\", \"ISOWeek\", \"ISOYear\"})",
+                "in",
+                "    Selected"
+              ]
+            }
+          }
+        ],
+        "dataCategory": "Time"
+      },
+      {
+        "name": "DimProduct",
+        "columns": [
+          {
+            "name": "ProductKey",
+            "dataType": "int64",
+            "sourceColumn": "ProductKey",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "ProductID",
+            "dataType": "int64",
+            "sourceColumn": "ProductID",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "ProductName",
+            "dataType": "string",
+            "sourceColumn": "ProductName",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Category",
+            "dataType": "string",
+            "sourceColumn": "Category",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Subcategory",
+            "dataType": "string",
+            "sourceColumn": "Subcategory",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "IsCurrent",
+            "dataType": "boolean",
+            "sourceColumn": "IsCurrent",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "DimProduct",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Sql.Database(\"localhost\", \"CompanyX_BI_DW\", [CreateNavigationProperties=false]),",
+                "    Data = Source{[Schema=\"dw\",Item=\"DimProduct\"]}[Data],",
+                "    Selected = Table.SelectColumns(Data, {\"ProductKey\", \"ProductID\", \"ProductName\", \"Category\", \"Subcategory\", \"IsCurrent\"})",
+                "in",
+                "    Selected"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "DimCustomer",
+        "columns": [
+          {
+            "name": "CustomerKey",
+            "dataType": "int64",
+            "sourceColumn": "CustomerKey",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "CustomerID",
+            "dataType": "int64",
+            "sourceColumn": "CustomerID",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "CustomerType",
+            "dataType": "string",
+            "sourceColumn": "CustomerType",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "DimCustomer",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Sql.Database(\"localhost\", \"CompanyX_BI_DW\", [CreateNavigationProperties=false]),",
+                "    Data = Source{[Schema=\"dw\",Item=\"DimCustomer\"]}[Data],",
+                "    Selected = Table.SelectColumns(Data, {\"CustomerKey\", \"CustomerID\", \"CustomerType\"})",
+                "in",
+                "    Selected"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "DimSalesPerson",
+        "columns": [
+          {
+            "name": "SalesPersonKey",
+            "dataType": "int64",
+            "sourceColumn": "SalesPersonKey",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "SalesPersonID",
+            "dataType": "int64",
+            "sourceColumn": "SalesPersonID",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "SalesPersonName",
+            "dataType": "string",
+            "sourceColumn": "SalesPersonName",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "DimSalesPerson",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Sql.Database(\"localhost\", \"CompanyX_BI_DW\", [CreateNavigationProperties=false]),",
+                "    Data = Source{[Schema=\"dw\",Item=\"DimSalesPerson\"]}[Data],",
+                "    Selected = Table.SelectColumns(Data, {\"SalesPersonKey\", \"SalesPersonID\", \"SalesPersonName\"})",
+                "in",
+                "    Selected"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "DimTerritory",
+        "columns": [
+          {
+            "name": "TerritoryKey",
+            "dataType": "int64",
+            "sourceColumn": "TerritoryKey",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "TerritoryID",
+            "dataType": "int64",
+            "sourceColumn": "TerritoryID",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "TerritoryName",
+            "dataType": "string",
+            "sourceColumn": "TerritoryName",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "CountryRegionCode",
+            "dataType": "string",
+            "sourceColumn": "CountryRegionCode",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "TerritoryGroup",
+            "dataType": "string",
+            "sourceColumn": "TerritoryGroup",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "DimTerritory",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Sql.Database(\"localhost\", \"CompanyX_BI_DW\", [CreateNavigationProperties=false]),",
+                "    Data = Source{[Schema=\"dw\",Item=\"DimTerritory\"]}[Data],",
+                "    Selected = Table.SelectColumns(Data, {\"TerritoryKey\", \"TerritoryID\", \"TerritoryName\", \"CountryRegionCode\", \"TerritoryGroup\"})",
+                "in",
+                "    Selected"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "DimPromotion",
+        "columns": [
+          {
+            "name": "PromotionKey",
+            "dataType": "int64",
+            "sourceColumn": "PromotionKey",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "SpecialOfferID",
+            "dataType": "int64",
+            "sourceColumn": "SpecialOfferID",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "Description",
+            "dataType": "string",
+            "sourceColumn": "Description",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "DimPromotion",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Sql.Database(\"localhost\", \"CompanyX_BI_DW\", [CreateNavigationProperties=false]),",
+                "    Data = Source{[Schema=\"dw\",Item=\"DimPromotion\"]}[Data],",
+                "    Selected = Table.SelectColumns(Data, {\"PromotionKey\", \"SpecialOfferID\", \"Description\"})",
+                "in",
+                "    Selected"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "Forecast",
+        "columns": [
+          {
+            "name": "ForecastRunKey",
+            "dataType": "int64",
+            "sourceColumn": "ForecastRunKey",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "WeekStart",
+            "dataType": "dateTime",
+            "sourceColumn": "WeekStart",
+            "summarizeBy": "none",
+            "formatString": "dd MMM yyyy"
+          },
+          {
+            "name": "Horizon",
+            "dataType": "int64",
+            "sourceColumn": "Horizon",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "PredictedSales",
+            "dataType": "double",
+            "sourceColumn": "PredictedSales",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "LowerBound",
+            "dataType": "double",
+            "sourceColumn": "LowerBound",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "UpperBound",
+            "dataType": "double",
+            "sourceColumn": "UpperBound",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Champion",
+            "dataType": "string",
+            "sourceColumn": "Champion",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "ForecastOriginDate",
+            "dataType": "dateTime",
+            "sourceColumn": "ForecastOriginDate",
+            "summarizeBy": "none",
+            "formatString": "dd MMM yyyy"
+          },
+          {
+            "name": "ReleaseStatus",
+            "dataType": "string",
+            "sourceColumn": "ReleaseStatus",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "CreatedAt",
+            "dataType": "dateTime",
+            "sourceColumn": "CreatedAt",
+            "summarizeBy": "none",
+            "formatString": "dd MMM yyyy"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Forecast",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Sql.Database(\"localhost\", \"CompanyX_BI_DW\", [CreateNavigationProperties=false]),",
+                "    Data = Source{[Schema=\"mart\",Item=\"LatestForecast\"]}[Data],",
+                "    Selected = Table.SelectColumns(Data, {\"ForecastRunKey\", \"WeekStart\", \"Horizon\", \"PredictedSales\", \"LowerBound\", \"UpperBound\", \"Champion\", \"ForecastOriginDate\", \"ReleaseStatus\", \"CreatedAt\"})",
+                "in",
+                "    Selected"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Model Status",
+            "expression": "SELECTEDVALUE(Forecast[ReleaseStatus],\"NO FORECAST\")",
+            "formatString": ""
+          },
+          {
+            "name": "Champion",
+            "expression": "SELECTEDVALUE(Forecast[Champion],\"NO MODEL\")",
+            "formatString": ""
+          },
+          {
+            "name": "Forecast Origin",
+            "expression": "MAX(Forecast[ForecastOriginDate])",
+            "formatString": "dd MMM yyyy"
+          },
+          {
+            "name": "Eight Week Forecast",
+            "expression": "SUM(Forecast[PredictedSales])",
+            "formatString": "#,0.00"
+          },
+          {
+            "name": "Planning Guidance",
+            "expression": "IF([Model Status]=\"REVIEW_REQUIRED\",\"Review model and sales history before changing plans\",\"Review forecast with the sales planning team\")",
+            "formatString": ""
+          }
+        ]
+      },
+      {
+        "name": "ForecastChart",
+        "columns": [
+          {
+            "name": "WeekStart",
+            "dataType": "dateTime",
+            "sourceColumn": "WeekStart",
+            "summarizeBy": "none",
+            "formatString": "dd MMM yyyy"
+          },
+          {
+            "name": "ActualSales",
+            "dataType": "double",
+            "sourceColumn": "ActualSales",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "PredictedSales",
+            "dataType": "double",
+            "sourceColumn": "PredictedSales",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "LowerBound",
+            "dataType": "double",
+            "sourceColumn": "LowerBound",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "UpperBound",
+            "dataType": "double",
+            "sourceColumn": "UpperBound",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "ForecastChart",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Sql.Database(\"localhost\", \"CompanyX_BI_DW\", [CreateNavigationProperties=false]),",
+                "    Data = Source{[Schema=\"mart\",Item=\"ForecastChart\"]}[Data],",
+                "    Selected = Table.SelectColumns(Data, {\"WeekStart\", \"ActualSales\", \"PredictedSales\", \"LowerBound\", \"UpperBound\"})",
+                "in",
+                "    Selected"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Actual Sales",
+            "expression": "SUM(ForecastChart[ActualSales])",
+            "formatString": "#,0.00"
+          },
+          {
+            "name": "Forecast Sales",
+            "expression": "SUM(ForecastChart[PredictedSales])",
+            "formatString": "#,0.00"
+          },
+          {
+            "name": "Lower 80%",
+            "expression": "SUM(ForecastChart[LowerBound])",
+            "formatString": "#,0.00"
+          },
+          {
+            "name": "Upper 80%",
+            "expression": "SUM(ForecastChart[UpperBound])",
+            "formatString": "#,0.00"
+          }
+        ]
+      },
+      {
+        "name": "ModelEvaluation",
+        "columns": [
+          {
+            "name": "ModelName",
+            "dataType": "string",
+            "sourceColumn": "ModelName",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "EvaluationSet",
+            "dataType": "string",
+            "sourceColumn": "EvaluationSet",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "MAE",
+            "dataType": "double",
+            "sourceColumn": "MAE",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "RMSE",
+            "dataType": "double",
+            "sourceColumn": "RMSE",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "WMAPE",
+            "dataType": "double",
+            "sourceColumn": "WMAPE",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Bias",
+            "dataType": "double",
+            "sourceColumn": "Bias",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "IntervalCoverage",
+            "dataType": "double",
+            "sourceColumn": "IntervalCoverage",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "N",
+            "dataType": "int64",
+            "sourceColumn": "N",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "ModelEvaluation",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Sql.Database(\"localhost\", \"CompanyX_BI_DW\", [CreateNavigationProperties=false]),",
+                "    Data = Source{[Schema=\"mart\",Item=\"LatestModelEvaluation\"]}[Data],",
+                "    Selected = Table.SelectColumns(Data, {\"ModelName\", \"EvaluationSet\", \"MAE\", \"RMSE\", \"WMAPE\", \"Bias\", \"IntervalCoverage\", \"N\"})",
+                "in",
+                "    Selected"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Holdout wMAPE",
+            "expression": "CALCULATE(MAX(ModelEvaluation[WMAPE]),ModelEvaluation[EvaluationSet]=\"holdout\")",
+            "formatString": "0.0%"
+          },
+          {
+            "name": "Holdout Coverage",
+            "expression": "CALCULATE(MAX(ModelEvaluation[IntervalCoverage]),ModelEvaluation[EvaluationSet]=\"holdout\")",
+            "formatString": "0.0%"
+          },
+          {
+            "name": "Holdout Bias",
+            "expression": "CALCULATE(MAX(ModelEvaluation[Bias]),ModelEvaluation[EvaluationSet]=\"holdout\")",
+            "formatString": "0.0%"
+          }
+        ]
+      },
+      {
+        "name": "Backtest",
+        "columns": [
+          {
+            "name": "ModelName",
+            "dataType": "string",
+            "sourceColumn": "ModelName",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "EvaluationSet",
+            "dataType": "string",
+            "sourceColumn": "EvaluationSet",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "TargetDate",
+            "dataType": "dateTime",
+            "sourceColumn": "TargetDate",
+            "summarizeBy": "none",
+            "formatString": "dd MMM yyyy"
+          },
+          {
+            "name": "Actual",
+            "dataType": "double",
+            "sourceColumn": "Actual",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "Predicted",
+            "dataType": "double",
+            "sourceColumn": "Predicted",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "LowerBound",
+            "dataType": "double",
+            "sourceColumn": "LowerBound",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "UpperBound",
+            "dataType": "double",
+            "sourceColumn": "UpperBound",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Backtest",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Sql.Database(\"localhost\", \"CompanyX_BI_DW\", [CreateNavigationProperties=false]),",
+                "    Data = Source{[Schema=\"mart\",Item=\"LatestBacktest\"]}[Data],",
+                "    Selected = Table.SelectColumns(Data, {\"ModelName\", \"EvaluationSet\", \"TargetDate\", \"Actual\", \"Predicted\", \"LowerBound\", \"UpperBound\"})",
+                "in",
+                "    Selected"
+              ]
+            }
+          }
+        ]
+      },
+      {
+        "name": "ETLBatch",
+        "columns": [
+          {
+            "name": "BatchID",
+            "dataType": "int64",
+            "sourceColumn": "BatchID",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "StartedAt",
+            "dataType": "dateTime",
+            "sourceColumn": "StartedAt",
+            "summarizeBy": "none",
+            "formatString": "dd MMM yyyy"
+          },
+          {
+            "name": "FinishedAt",
+            "dataType": "dateTime",
+            "sourceColumn": "FinishedAt",
+            "summarizeBy": "none",
+            "formatString": "dd MMM yyyy"
+          },
+          {
+            "name": "Status",
+            "dataType": "string",
+            "sourceColumn": "Status",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "RowsRead",
+            "dataType": "int64",
+            "sourceColumn": "RowsRead",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "RowsInserted",
+            "dataType": "int64",
+            "sourceColumn": "RowsInserted",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "RowsUpdated",
+            "dataType": "int64",
+            "sourceColumn": "RowsUpdated",
+            "summarizeBy": "none"
+          },
+          {
+            "name": "RowsRejected",
+            "dataType": "int64",
+            "sourceColumn": "RowsRejected",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "ETLBatch",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Sql.Database(\"localhost\", \"CompanyX_BI_DW\", [CreateNavigationProperties=false]),",
+                "    Data = Source{[Schema=\"ctl\",Item=\"Batch\"]}[Data],",
+                "    Selected = Table.SelectColumns(Data, {\"BatchID\", \"StartedAt\", \"FinishedAt\", \"Status\", \"RowsRead\", \"RowsInserted\", \"RowsUpdated\", \"RowsRejected\"})",
+                "in",
+                "    Selected"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Last Successful ETL",
+            "expression": "CALCULATE(MAX(ETLBatch[FinishedAt]),ETLBatch[Status]=\"SUCCESS\")",
+            "formatString": "dd MMM yyyy HH:mm"
+          }
+        ]
+      },
+      {
+        "name": "Quarantine",
+        "columns": [
+          {
+            "name": "SalesOrderDetailID",
+            "dataType": "int64",
+            "sourceColumn": "SalesOrderDetailID",
+            "summarizeBy": "none",
+            "isHidden": true
+          },
+          {
+            "name": "Reason",
+            "dataType": "string",
+            "sourceColumn": "Reason",
+            "summarizeBy": "none"
+          }
+        ],
+        "partitions": [
+          {
+            "name": "Quarantine",
+            "mode": "import",
+            "source": {
+              "type": "m",
+              "expression": [
+                "let",
+                "    Source = Sql.Database(\"localhost\", \"CompanyX_BI_DW\", [CreateNavigationProperties=false]),",
+                "    Data = Source{[Schema=\"ctl\",Item=\"RejectedSales\"]}[Data],",
+                "    Selected = Table.SelectColumns(Data, {\"SalesOrderDetailID\", \"Reason\"})",
+                "in",
+                "    Selected"
+              ]
+            }
+          }
+        ],
+        "measures": [
+          {
+            "name": "Rejected Lines",
+            "expression": "COUNTROWS(Quarantine)",
+            "formatString": "#,0"
+          }
+        ]
+      }
+    ],
+    "relationships": [
+      {
+        "name": "FactSales_DimDate",
+        "fromTable": "FactSales",
+        "fromColumn": "SalesDateKey",
+        "toTable": "DimDate",
+        "toColumn": "DateKey",
+        "fromCardinality": "many",
+        "toCardinality": "one",
+        "crossFilteringBehavior": "oneDirection",
+        "isActive": true
+      },
+      {
+        "name": "FactSales_DimProduct",
+        "fromTable": "FactSales",
+        "fromColumn": "ProductKey",
+        "toTable": "DimProduct",
+        "toColumn": "ProductKey",
+        "fromCardinality": "many",
+        "toCardinality": "one",
+        "crossFilteringBehavior": "oneDirection",
+        "isActive": true
+      },
+      {
+        "name": "FactSales_DimCustomer",
+        "fromTable": "FactSales",
+        "fromColumn": "CustomerKey",
+        "toTable": "DimCustomer",
+        "toColumn": "CustomerKey",
+        "fromCardinality": "many",
+        "toCardinality": "one",
+        "crossFilteringBehavior": "oneDirection",
+        "isActive": true
+      },
+      {
+        "name": "FactSales_DimSalesPerson",
+        "fromTable": "FactSales",
+        "fromColumn": "SalesPersonKey",
+        "toTable": "DimSalesPerson",
+        "toColumn": "SalesPersonKey",
+        "fromCardinality": "many",
+        "toCardinality": "one",
+        "crossFilteringBehavior": "oneDirection",
+        "isActive": true
+      },
+      {
+        "name": "FactSales_DimTerritory",
+        "fromTable": "FactSales",
+        "fromColumn": "TerritoryKey",
+        "toTable": "DimTerritory",
+        "toColumn": "TerritoryKey",
+        "fromCardinality": "many",
+        "toCardinality": "one",
+        "crossFilteringBehavior": "oneDirection",
+        "isActive": true
+      },
+      {
+        "name": "FactSales_DimPromotion",
+        "fromTable": "FactSales",
+        "fromColumn": "PromotionKey",
+        "toTable": "DimPromotion",
+        "toColumn": "PromotionKey",
+        "fromCardinality": "many",
+        "toCardinality": "one",
+        "crossFilteringBehavior": "oneDirection",
+        "isActive": true
+      }
+    ],
+    "annotations": [
+      {
+        "name": "__PBI_TimeIntelligenceEnabled",
+        "value": "0"
+      }
+    ]
+  }
+}

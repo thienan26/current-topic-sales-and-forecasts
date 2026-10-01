@@ -1,0 +1,8 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/page/2.1.0/schema.json",
+  "name": "Forecast",
+  "displayName": "04 | Forecast and decisions",
+  "displayOption": "FitToPage",
+  "height": 800,
+  "width": 1280
+}

@@ -1,0 +1,120 @@
+{
+  "$schema": "https://developer.microsoft.com/json-schemas/fabric/item/report/definition/visualContainer/2.9.0/schema.json",
+  "name": "forecastchart",
+  "position": {
+    "x": 24,
+    "y": 230,
+    "z": 0,
+    "height": 310,
+    "width": 795,
+    "tabOrder": 0
+  },
+  "visual": {
+    "visualType": "lineChart",
+    "query": {
+      "queryState": {
+        "Category": {
+          "projections": [
+            {
+              "field": {
+                "Column": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ForecastChart"
+                    }
+                  },
+                  "Property": "WeekStart"
+                }
+              },
+              "queryRef": "ForecastChart.WeekStart",
+              "nativeQueryRef": "WeekStart"
+            }
+          ]
+        },
+        "Y": {
+          "projections": [
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ForecastChart"
+                    }
+                  },
+                  "Property": "Actual Sales"
+                }
+              },
+              "queryRef": "ForecastChart.Actual Sales",
+              "nativeQueryRef": "Actual Sales"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ForecastChart"
+                    }
+                  },
+                  "Property": "Forecast Sales"
+                }
+              },
+              "queryRef": "ForecastChart.Forecast Sales",
+              "nativeQueryRef": "Forecast Sales"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ForecastChart"
+                    }
+                  },
+                  "Property": "Lower 80%"
+                }
+              },
+              "queryRef": "ForecastChart.Lower 80%",
+              "nativeQueryRef": "Lower 80%"
+            },
+            {
+              "field": {
+                "Measure": {
+                  "Expression": {
+                    "SourceRef": {
+                      "Entity": "ForecastChart"
+                    }
+                  },
+                  "Property": "Upper 80%"
+                }
+              },
+              "queryRef": "ForecastChart.Upper 80%",
+              "nativeQueryRef": "Upper 80%"
+            }
+          ]
+        }
+      }
+    },
+    "visualContainerObjects": {
+      "title": [
+        {
+          "properties": {
+            "show": {
+              "expr": {
+                "Literal": {
+                  "Value": "true"
+                }
+              }
+            },
+            "text": {
+              "expr": {
+                "Literal": {
+                  "Value": "'Actual / forecast / approximate 80% lower and upper bounds'"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    "drillFilterOtherVisuals": true
+  }
+}

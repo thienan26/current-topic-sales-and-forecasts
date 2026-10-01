@@ -1,0 +1,20 @@
+{
+  "passed": 15,
+  "checks": [
+    "Rerun is idempotent",
+    "Valid shipped source exactly reconciles with KPI mart",
+    "Quarantine + fact count reconciles with source",
+    "Failed batch leaves watermark unchanged",
+    "Failed batch rolls back facts",
+    "Retry loads detail update",
+    "Header-only change updates all detail rows",
+    "Cancelled order excluded from KPI",
+    "Dimension change creates a new SCD2 version",
+    "Historical sale retains its historical surrogate key",
+    "One current version per business key",
+    "Bad update is quarantined and removed from fact",
+    "Repaired row leaves quarantine and returns to fact",
+    "New detail inserted incrementally",
+    "Hard delete detected by key reconciliation"
+  ]
+}
